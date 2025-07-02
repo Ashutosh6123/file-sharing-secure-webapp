@@ -1,0 +1,23 @@
+SECURE FILE SHARE - Magic Login Link
+
+Hello {{ user.get_full_name|default:user.username }},
+
+You have successfully logged into the Secure File Sharing System. For your convenience, we've created a magic login link that will allow you to access your account directly without entering your credentials again.
+
+MAGIC LOGIN LINK:
+{{ magic_link }}
+
+SECURITY NOTICE:
+- This link is valid for 1 hour from the time it was generated
+- The link can only be used once
+- Do not share this link with anyone
+- If you didn't request this, please ignore this email
+
+LOGIN DETAILS:
+- Login Time: {{ login_time }}
+- IP Address: {{ user_ip }}
+- User Agent: {{ user_agent }}
+
+If you have any questions, please contact your system administrator.
+
+© 2025 Secure File Share. All rights reserved.

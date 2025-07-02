@@ -39,8 +39,13 @@
                 </form>
             </div>
             <div class="card-footer text-center">
-                <p class="mb-0">Don't have an account? 
-                    <a href="{% url 'client_register' %}">Register as Client User</a> | 
+                <p class="mb-2">Don't have an account? 
+                    <a href="{% url 'client_register' %}">Register as Client User</a>
+                </p>
+                <p class="mb-0">
+                    <a href="{% url 'request_magic_login' %}" class="text-info">
+                        <i class="fas fa-magic"></i> Request Magic Login Link
+                    </a> | 
                     <a href="{% url 'home' %}">Back to Home</a>
                 </p>
             </div>

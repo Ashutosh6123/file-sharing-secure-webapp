@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="fas fa-magic"></i> Request Magic Login Link</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Enter your email address to receive a magic login link. This link will allow you to access your account without entering your password.</p>
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your registered email">
+                        <div class="form-text">We'll send a secure login link to this email address.</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-info">
+                            <i class="fas fa-paper-plane"></i> Send Magic Login Link
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="mt-4">
+                    <div class="alert alert-light border" role="alert">
+                        <h6><i class="fas fa-info-circle"></i> How it works:</h6>
+                        <ol class="small mb-0">
+                            <li>Enter your registered email address above</li>
+                            <li>Check your email for the magic login link</li>
+                            <li>Click the link to automatically log in</li>
+                            <li>The link expires in 1 hour and can only be used once</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <p class="mb-0">
+                    <a href="{% url 'client_login' %}">Back to Login</a> | 
+                    <a href="{% url 'home' %}">Home</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

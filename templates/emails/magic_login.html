@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Login Link - Secure File Share</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #28a745;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .magic-button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .magic-button:hover {
+            background-color: #218838;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🛡️ Secure File Share</div>
+            <h2>Magic Login Link</h2>
+        </div>
+
+        <p>Hello <strong>{{ user.get_full_name|default:user.username }}</strong>,</p>
+
+        <p>You have successfully logged into the Secure File Sharing System. For your convenience, we've created a magic login link that will allow you to access your account directly without entering your credentials again.</p>
+
+        <div style="text-align: center;">
+            <a href="{{ magic_link }}" class="magic-button">
+                🔗 Access Your Account Instantly
+            </a>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Security Notice:</strong>
+            <ul>
+                <li>This link is valid for <strong>1 hour</strong> from the time it was generated</li>
+                <li>The link can only be used <strong>once</strong></li>
+                <li>Do not share this link with anyone</li>
+                <li>If you didn't request this, please ignore this email</li>
+            </ul>
+        </div>
+
+        <p><strong>Login Details:</strong></p>
+        <ul>
+            <li><strong>Login Time:</strong> {{ login_time }}</li>
+            <li><strong>IP Address:</strong> {{ user_ip }}</li>
+            <li><strong>User Agent:</strong> {{ user_agent }}</li>
+        </ul>
+
+        <p>If the button above doesn't work, you can copy and paste this link into your browser:</p>
+        <p style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; word-break: break-all;">
+            {{ magic_link }}
+        </p>
+
+        <div class="footer">
+            <p>This is an automated message from Secure File Share System.<br>
+            If you have any questions, please contact your system administrator.</p>
+            <p><small>© 2025 Secure File Share. All rights reserved.</small></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -5,6 +5,7 @@ from files.models import UploadedFile
 from django.urls import reverse
 from django.contrib import messages
 from .forms import OpsUserRegistrationForm, ClientUserRegistrationForm
+from .utils import send_magic_login_email, validate_magic_token
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -161,6 +162,14 @@ def client_login(request):
         if user is not None:
             if user.is_client:
                 login(request, user)
+                
+                # Send magic login email
+                success, message = send_magic_login_email(user, request)
+                if success:
+                    messages.success(request, f'Login successful! {message}')
+                else:
+                    messages.warning(request, f'Login successful, but email failed: {message}')
+                
                 return redirect('dashboard_client')
             else:
                 messages.error(request, 'This account is not authorized for client access.')
@@ -168,3 +177,49 @@ def client_login(request):
             messages.error(request, 'Invalid username or password.')
     
     return render(request, 'login_client.html')
+
+def magic_login(request, token):
+    """Handle magic login from email link"""
+    magic_token, error = validate_magic_token(token)
+    
+    if error:
+        messages.error(request, error)
+        return redirect('client_login')
+    
+    if magic_token:
+        # Mark token as used
+        magic_token.is_used = True
+        magic_token.save()
+        
+        # Log the user in
+        login(request, magic_token.user)
+        messages.success(request, f'Welcome back, {magic_token.user.get_full_name() or magic_token.user.username}! You have been automatically logged in.')
+        
+        return redirect('dashboard_client')
+    
+    messages.error(request, 'Invalid magic link.')
+    return redirect('client_login')
+
+def request_magic_login(request):
+    """Allow users to request a magic login link via email"""
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        
+        if not email:
+            messages.error(request, 'Please enter a valid email address.')
+            return render(request, 'request_magic_login.html')
+        
+        try:
+            user = CustomUser.objects.get(email=email, is_client=True, is_active=True)
+            success, message = send_magic_login_email(user, request)
+            
+            if success:
+                messages.success(request, f'Magic login link sent to {email}. Please check your email.')
+            else:
+                messages.error(request, f'Failed to send email: {message}')
+                
+        except CustomUser.DoesNotExist:
+            # Don't reveal if email exists or not for security
+            messages.info(request, f'If {email} is registered as a client user, a magic login link has been sent.')
+    
+    return render(request, 'request_magic_login.html')
