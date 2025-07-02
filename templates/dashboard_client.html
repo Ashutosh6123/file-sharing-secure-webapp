@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h4>Available Files</h4>
+<ul>
+  {% for f in files %}
+    <li>
+      {{ f.file.name }}
+      <a href="{% url 'generate_link' f.id %}" class="btn btn-sm btn-info">Get Secure Link</a>
+    </li>
+  {% empty %}
+    <li>No files available.</li>
+  {% endfor %}
+</ul>
+{% if link %}
+  <div class="alert alert-success mt-3">
+    Download link: <a href="{{ link }}">{{ link }}</a>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="jumbotron bg-light p-5 rounded-3 text-center mb-4">
+            <h1 class="display-4">Welcome to Secure File Sharing</h1>
+            <p class="lead">A secure platform for file upload and download with role-based access control.</p>
+            <hr class="my-4">
+            <p>Choose your user type to get started:</p>
+        </div>
+
+        <div class="row">
+            <!-- Operations User Section -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-upload fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Operations User</h5>
+                        <p class="card-text">Upload and manage files. Perfect for administrators and content managers.</p>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'ops_login' %}" class="btn btn-primary">Login as Operations</a>
+                            <a href="{% url 'ops_register' %}" class="btn btn-outline-primary">Register as Operations</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client User Section -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-download fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Client User</h5>
+                        <p class="card-text">Access and download files securely. Perfect for end users and customers.</p>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'client_login' %}" class="btn btn-success">Login as Client</a>
+                            <a href="{% url 'client_register' %}" class="btn btn-outline-success">Register as Client</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="text-center mb-4">Features</h3>
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-shield-alt fa-2x text-info mb-2"></i>
+                        <h6>Secure Upload</h6>
+                        <p class="small">Files are validated and stored securely with token-based access.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-file-alt fa-2x text-warning mb-2"></i>
+                        <h6>File Type Control</h6>
+                        <p class="small">Only approved file types (.docx, .pptx, .xlsx) are allowed.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-users fa-2x text-danger mb-2"></i>
+                        <h6>Role-Based Access</h6>
+                        <p class="small">Different permissions for operations and client users.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

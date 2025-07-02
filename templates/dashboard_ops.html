@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h4>Operations Dashboard - File Management</h4>
+
+<!-- File Upload Section -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Upload New File</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="file" class="form-label">Choose File (*.docx, *.pptx, *.xlsx only)</label>
+                <input type="file" class="form-control" id="file" name="file" accept=".docx,.pptx,.xlsx" required>
+                <div class="form-text">Only Word documents, PowerPoint presentations, and Excel spreadsheets are allowed.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload File</button>
+        </form>
+    </div>
+</div>
+
+<!-- Uploaded Files Section -->
+<div class="card">
+    <div class="card-header">
+        <h5>Uploaded Files</h5>
+    </div>
+    <div class="card-body">
+        {% if files %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Uploaded By</th>
+                            <th>Upload Date</th>
+                            <th>File Size</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for f in files %}
+                        <tr>
+                            <td>{{ f.file.name }}</td>
+                            <td>{{ f.uploader.username }}</td>
+                            <td>{{ f.uploaded_at|date:"M d, Y H:i" }}</td>
+                            <td>{{ f.file.size|filesizeformat }}</td>
+                            <td>
+                                <span class="badge bg-success">Available</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                No files have been uploaded yet. Use the upload form above to add files.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+</div>
+{% endblock %}
