@@ -1,15 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
-<form method="post">
-  {% csrf_token %}
-  <div class="mb-3">
-    <label>Username</label>
-    <input type="text" name="username" class="form-control" required>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-center">🔗 Magic Link Login</h3>
+        </div>
+        <div class="card-body">
+          <p class="text-center text-muted">Enter your email to receive a secure magic login link</p>
+          
+          <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" name="email" id="email" class="form-control" required 
+                     placeholder="Enter your email address">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+              📧 Send Magic Login Link
+            </button>
+          </form>
+          
+          <div class="text-center mt-3">
+            <small class="text-muted">
+              A secure login link will be sent to your email
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="mb-3">
-    <label>Password</label>
-    <input type="password" name="password" class="form-control" required>
-  </div>
-  <button type="submit" class="btn btn-primary">Login</button>
-</form>
+</div>
 {% endblock %}

@@ -5,10 +5,10 @@
     <div class="col-md-5">
         <div class="card">
             <div class="card-header bg-success text-white">
-                <h4 class="mb-0"><i class="fas fa-sign-in-alt"></i> Client User Login</h4>
+                <h4 class="mb-0"><i class="fas fa-link"></i> Client Magic Login</h4>
             </div>
             <div class="card-body">
-                <p class="text-muted">Login to access and download files.</p>
+                <p class="text-muted">Enter your email to receive a secure magic login link for client access.</p>
                 
                 {% if messages %}
                     {% for message in messages %}
@@ -21,30 +21,33 @@
 
                 <form method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="user_type" value="client">
                     
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" required 
+                               placeholder="Enter your email address">
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success">Login as Client User</button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-paper-plane"></i> Send Magic Login Link
+                        </button>
                     </div>
                 </form>
+                
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        <i class="fas fa-shield-alt"></i> A secure login link will be sent to your email
+                    </small>
+                </div>
             </div>
             <div class="card-footer text-center">
                 <p class="mb-2">Don't have an account? 
                     <a href="{% url 'client_register' %}">Register as Client User</a>
                 </p>
                 <p class="mb-0">
-                    <a href="{% url 'request_magic_login' %}" class="text-info">
-                        <i class="fas fa-magic"></i> Request Magic Login Link
+                    <a href="{% url 'ops_login' %}" class="text-primary">
+                        <i class="fas fa-cog"></i> Operations Login
                     </a> | 
                     <a href="{% url 'home' %}">Back to Home</a>
                 </p>

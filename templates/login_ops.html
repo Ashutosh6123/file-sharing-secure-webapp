@@ -5,10 +5,10 @@
     <div class="col-md-5">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0"><i class="fas fa-sign-in-alt"></i> Operations User Login</h4>
+                <h4 class="mb-0"><i class="fas fa-link"></i> Operations Magic Login</h4>
             </div>
             <div class="card-body">
-                <p class="text-muted">Login to upload and manage files.</p>
+                <p class="text-muted">Enter your email to receive a secure magic login link for operations access.</p>
                 
                 {% if messages %}
                     {% for message in messages %}
@@ -21,26 +21,30 @@
 
                 <form method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="user_type" value="ops">
                     
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" required 
+                               placeholder="Enter your email address">
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Login as Operations User</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Send Magic Login Link
+                        </button>
                     </div>
                 </form>
+                
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        <i class="fas fa-shield-alt"></i> A secure login link will be sent to your email
+                    </small>
+                </div>
             </div>
             <div class="card-footer text-center">
                 <p class="mb-0">Don't have an account? 
                     <a href="{% url 'ops_register' %}">Register as Operations User</a> | 
+                    <a href="{% url 'client_login' %}" class="text-success">Client Login</a> |
                     <a href="{% url 'home' %}">Back to Home</a>
                 </p>
             </div>

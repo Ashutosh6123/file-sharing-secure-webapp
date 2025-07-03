@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from files.models import UploadedFile
 from django.urls import reverse
 from django.contrib import messages
+from django.db import models
 from .forms import OpsUserRegistrationForm, ClientUserRegistrationForm
 from .utils import send_magic_login_email, validate_magic_token
 
@@ -94,20 +95,39 @@ def client_register(request):
     return render(request, 'register_client.html', {'form': form})
 
 def user_login(request):
-    message = ""
+    """General login view - Magic link only"""
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user:
-            login(request, user)
-            if user.is_ops:
-                return redirect('dashboard_ops')
-            elif user.is_client:
-                return redirect('dashboard_client')
-        else:
-            message = "Invalid username or password"
-    return render(request, 'login.html', {'message': message})
+        email = request.POST.get('email', '').strip()
+        
+        if not email:
+            messages.error(request, 'Please enter your email address.')
+            return render(request, 'login.html')
+        
+        try:
+            # Find user by email (both ops and client users)
+            user = CustomUser.objects.filter(
+                email=email, 
+                is_active=True
+            ).filter(
+                models.Q(is_client=True) | models.Q(is_ops=True)
+            ).first()
+            
+            if user:
+                success, message = send_magic_login_email(user, request)
+                
+                if success:
+                    messages.success(request, f'Magic login link sent to {email}. Please check your email.')
+                else:
+                    messages.error(request, f'Failed to send email: {message}')
+            else:
+                # Don't reveal if email exists or not for security
+                messages.info(request, f'If {email} is registered as a user, a magic login link has been sent.')
+                
+        except Exception:
+            # Don't reveal if email exists or not for security
+            messages.info(request, f'If {email} is registered as a user, a magic login link has been sent.')
+    
+    return render(request, 'login.html')
 
 def user_logout(request):
     logout(request)
@@ -135,46 +155,70 @@ def dashboard_client(request):
     return render(request, 'dashboard_client.html', {'files': files})
 
 def ops_login(request):
-    """Login view specifically for operations users"""
+    """Login view specifically for operations users - Magic link only"""
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        email = request.POST.get('email', '').strip()
         
-        if user is not None:
-            if user.is_ops:
-                login(request, user)
-                return redirect('dashboard_ops')
+        if not email:
+            messages.error(request, 'Please enter your email address.')
+            return render(request, 'login_ops.html')
+        
+        try:
+            # Find operations user by email
+            user = CustomUser.objects.filter(
+                email=email, 
+                is_active=True,
+                is_ops=True
+            ).first()
+            
+            if user:
+                success, message = send_magic_login_email(user, request)
+                
+                if success:
+                    messages.success(request, f'Magic login link sent to {email}. Please check your email.')
+                else:
+                    messages.error(request, f'Failed to send email: {message}')
             else:
-                messages.error(request, 'This account is not authorized for operations access.')
-        else:
-            messages.error(request, 'Invalid username or password.')
+                # Don't reveal if email exists or not for security
+                messages.info(request, f'If {email} is registered as an operations user, a magic login link has been sent.')
+                
+        except Exception:
+            # Don't reveal if email exists or not for security
+            messages.info(request, f'If {email} is registered as an operations user, a magic login link has been sent.')
     
     return render(request, 'login_ops.html')
 
 def client_login(request):
-    """Login view specifically for client users"""
+    """Login view specifically for client users - Magic link only"""
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        email = request.POST.get('email', '').strip()
         
-        if user is not None:
-            if user.is_client:
-                login(request, user)
-                
-                # Send magic login email
+        if not email:
+            messages.error(request, 'Please enter your email address.')
+            return render(request, 'login_client.html')
+        
+        try:
+            # Find client user by email
+            user = CustomUser.objects.filter(
+                email=email, 
+                is_active=True,
+                is_client=True
+            ).first()
+            
+            if user:
                 success, message = send_magic_login_email(user, request)
-                if success:
-                    messages.success(request, f'Login successful! {message}')
-                else:
-                    messages.warning(request, f'Login successful, but email failed: {message}')
                 
-                return redirect('dashboard_client')
+                if success:
+                    messages.success(request, f'Magic login link sent to {email}. Please check your email.')
+                else:
+                    messages.error(request, f'Failed to send email: {message}')
             else:
-                messages.error(request, 'This account is not authorized for client access.')
-        else:
-            messages.error(request, 'Invalid username or password.')
+                # Don't reveal if email exists or not for security
+                messages.info(request, f'If {email} is registered as a client user, a magic login link has been sent.')
+                
+        except Exception:
+            # Don't reveal if email exists or not for security
+            messages.info(request, f'If {email} is registered as a client user, a magic login link has been sent.')
     
     return render(request, 'login_client.html')
 
@@ -184,7 +228,7 @@ def magic_login(request, token):
     
     if error:
         messages.error(request, error)
-        return redirect('client_login')
+        return redirect('home')
     
     if magic_token:
         # Mark token as used
@@ -195,10 +239,16 @@ def magic_login(request, token):
         login(request, magic_token.user)
         messages.success(request, f'Welcome back, {magic_token.user.get_full_name() or magic_token.user.username}! You have been automatically logged in.')
         
-        return redirect('dashboard_client')
+        # Redirect to appropriate dashboard based on user type
+        if magic_token.user.is_ops:
+            return redirect('dashboard_ops')
+        elif magic_token.user.is_client:
+            return redirect('dashboard_client')
+        else:
+            return redirect('home')
     
     messages.error(request, 'Invalid magic link.')
-    return redirect('client_login')
+    return redirect('home')
 
 def request_magic_login(request):
     """Allow users to request a magic login link via email"""
@@ -210,16 +260,27 @@ def request_magic_login(request):
             return render(request, 'request_magic_login.html')
         
         try:
-            user = CustomUser.objects.get(email=email, is_client=True, is_active=True)
-            success, message = send_magic_login_email(user, request)
+            # Support both ops and client users
+            user = CustomUser.objects.filter(
+                email=email, 
+                is_active=True
+            ).filter(
+                models.Q(is_client=True) | models.Q(is_ops=True)
+            ).first()
             
-            if success:
-                messages.success(request, f'Magic login link sent to {email}. Please check your email.')
-            else:
-                messages.error(request, f'Failed to send email: {message}')
+            if user:
+                success, message = send_magic_login_email(user, request)
                 
-        except CustomUser.DoesNotExist:
+                if success:
+                    messages.success(request, f'Magic login link sent to {email}. Please check your email.')
+                else:
+                    messages.error(request, f'Failed to send email: {message}')
+            else:
+                # Don't reveal if email exists or not for security
+                messages.info(request, f'If {email} is registered as a user, a magic login link has been sent.')
+                
+        except Exception:
             # Don't reveal if email exists or not for security
-            messages.info(request, f'If {email} is registered as a client user, a magic login link has been sent.')
+            messages.info(request, f'If {email} is registered as a user, a magic login link has been sent.')
     
     return render(request, 'request_magic_login.html')
