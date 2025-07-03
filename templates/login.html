@@ -5,10 +5,10 @@
     <div class="col-md-6">
       <div class="card">
         <div class="card-header">
-          <h3 class="text-center">🔗 Magic Link Login</h3>
+          <h3 class="text-center">🔗 Verification Link Login</h3>
         </div>
         <div class="card-body">
-          <p class="text-center text-muted">Enter your email to receive a secure magic login link</p>
+          <p class="text-center text-muted">Enter your email to receive a secure verification login link</p>
           
           <form method="post">
             {% csrf_token %}
@@ -18,7 +18,7 @@
                      placeholder="Enter your email address">
             </div>
             <button type="submit" class="btn btn-primary w-100">
-              📧 Send Magic Login Link
+              📧 Send Verification Login Link
             </button>
           </form>
           

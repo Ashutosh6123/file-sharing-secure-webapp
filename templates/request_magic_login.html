@@ -5,10 +5,10 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header bg-info text-white">
-                <h4 class="mb-0"><i class="fas fa-magic"></i> Request Magic Login Link</h4>
+                <h4 class="mb-0"><i class="fas fa-magic"></i> Request Verification Login Link</h4>
             </div>
             <div class="card-body">
-                <p class="text-muted">Enter your email address to receive a magic login link. This link will allow you to access your account without entering your password.</p>
+                <p class="text-muted">Enter your email address to receive a verification login link. This link will allow you to access your account without entering your password.</p>
                 
                 {% if messages %}
                     {% for message in messages %}
@@ -30,7 +30,7 @@
 
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-info">
-                            <i class="fas fa-paper-plane"></i> Send Magic Login Link
+                            <i class="fas fa-paper-plane"></i> Send Verification Login Link
                         </button>
                     </div>
                 </form>
@@ -40,7 +40,7 @@
                         <h6><i class="fas fa-info-circle"></i> How it works:</h6>
                         <ol class="small mb-0">
                             <li>Enter your registered email address above</li>
-                            <li>Check your email for the magic login link</li>
+                            <li>Check your email for the verification login link</li>
                             <li>Click the link to automatically log in</li>
                             <li>The link expires in 1 hour and can only be used once</li>
                         </ol>

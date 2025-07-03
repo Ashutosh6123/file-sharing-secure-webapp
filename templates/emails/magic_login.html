@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magic Login Link - Secure File Share</title>
+    <title>Verification Login Link - Secure File Share</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,12 +66,12 @@
     <div class="container">
         <div class="header">
             <div class="logo">🛡️ Secure File Share</div>
-            <h2>Magic Login Link</h2>
+            <h2>Verification Login Link</h2>
         </div>
 
         <p>Hello <strong>{{ user.get_full_name|default:user.username }}</strong>,</p>
 
-        <p>You have successfully logged into the Secure File Sharing System. For your convenience, we've created a magic login link that will allow you to access your account directly without entering your credentials again.</p>
+        <p>You have successfully logged into the Secure File Sharing System. For your convenience, we've created a verification login link that will allow you to access your account directly without entering your credentials again.</p>
 
         <div style="text-align: center;">
             <a href="{{ magic_link }}" class="magic-button">

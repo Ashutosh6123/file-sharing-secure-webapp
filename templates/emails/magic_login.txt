@@ -1,10 +1,10 @@
-SECURE FILE SHARE - Magic Login Link
+SECURE FILE SHARE - Verification Login Link
 
 Hello {{ user.get_full_name|default:user.username }},
 
-You have successfully logged into the Secure File Sharing System. For your convenience, we've created a magic login link that will allow you to access your account directly without entering your credentials again.
+You have successfully logged into the Secure File Sharing System. For your convenience, we've created a verification login link that will allow you to access your account directly without entering your credentials again.
 
-MAGIC LOGIN LINK:
+VERIFICATION LOGIN LINK:
 {{ magic_link }}
 
 SECURITY NOTICE:

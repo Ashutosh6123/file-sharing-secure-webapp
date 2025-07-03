@@ -95,7 +95,7 @@ def client_register(request):
     return render(request, 'register_client.html', {'form': form})
 
 def user_login(request):
-    """General login view - Magic link only"""
+    """General login view - Verification link only"""
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
         
@@ -116,16 +116,16 @@ def user_login(request):
                 success, message = send_magic_login_email(user, request)
                 
                 if success:
-                    messages.success(request, f'Magic login link sent to {email}. Please check your email.')
+                    messages.success(request, f'Verification login link sent to {email}. Please check your email.')
                 else:
                     messages.error(request, f'Failed to send email: {message}')
             else:
                 # Don't reveal if email exists or not for security
-                messages.info(request, f'If {email} is registered as a user, a magic login link has been sent.')
+                messages.info(request, f'If {email} is registered as a user, a verification login link has been sent.')
                 
         except Exception:
             # Don't reveal if email exists or not for security
-            messages.info(request, f'If {email} is registered as a user, a magic login link has been sent.')
+            messages.info(request, f'If {email} is registered as a user, a verification login link has been sent.')
     
     return render(request, 'login.html')
 
@@ -155,7 +155,7 @@ def dashboard_client(request):
     return render(request, 'dashboard_client.html', {'files': files})
 
 def ops_login(request):
-    """Login view specifically for operations users - Magic link only"""
+    """Login view specifically for operations users - Verification link only"""
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
         
@@ -175,21 +175,21 @@ def ops_login(request):
                 success, message = send_magic_login_email(user, request)
                 
                 if success:
-                    messages.success(request, f'Magic login link sent to {email}. Please check your email.')
+                    messages.success(request, f'Verification login link sent to {email}. Please check your email.')
                 else:
                     messages.error(request, f'Failed to send email: {message}')
             else:
                 # Don't reveal if email exists or not for security
-                messages.info(request, f'If {email} is registered as an operations user, a magic login link has been sent.')
+                messages.info(request, f'If {email} is registered as an operations user, a verification login link has been sent.')
                 
         except Exception:
             # Don't reveal if email exists or not for security
-            messages.info(request, f'If {email} is registered as an operations user, a magic login link has been sent.')
+            messages.info(request, f'If {email} is registered as an operations user, a verification login link has been sent.')
     
     return render(request, 'login_ops.html')
 
 def client_login(request):
-    """Login view specifically for client users - Magic link only"""
+    """Login view specifically for client users - Verification link only"""
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
         
@@ -209,21 +209,21 @@ def client_login(request):
                 success, message = send_magic_login_email(user, request)
                 
                 if success:
-                    messages.success(request, f'Magic login link sent to {email}. Please check your email.')
+                    messages.success(request, f'Verification login link sent to {email}. Please check your email.')
                 else:
                     messages.error(request, f'Failed to send email: {message}')
             else:
                 # Don't reveal if email exists or not for security
-                messages.info(request, f'If {email} is registered as a client user, a magic login link has been sent.')
+                messages.info(request, f'If {email} is registered as a client user, a verification login link has been sent.')
                 
         except Exception:
             # Don't reveal if email exists or not for security
-            messages.info(request, f'If {email} is registered as a client user, a magic login link has been sent.')
+            messages.info(request, f'If {email} is registered as a client user, a verification login link has been sent.')
     
     return render(request, 'login_client.html')
 
 def magic_login(request, token):
-    """Handle magic login from email link"""
+    """Handle verification login from email link"""
     magic_token, error = validate_magic_token(token)
     
     if error:
@@ -247,11 +247,11 @@ def magic_login(request, token):
         else:
             return redirect('home')
     
-    messages.error(request, 'Invalid magic link.')
+    messages.error(request, 'Invalid verification link.')
     return redirect('home')
 
 def request_magic_login(request):
-    """Allow users to request a magic login link via email"""
+    """Allow users to request a verification login link via email"""
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
         
@@ -272,15 +272,15 @@ def request_magic_login(request):
                 success, message = send_magic_login_email(user, request)
                 
                 if success:
-                    messages.success(request, f'Magic login link sent to {email}. Please check your email.')
+                    messages.success(request, f'Verification login link sent to {email}. Please check your email.')
                 else:
                     messages.error(request, f'Failed to send email: {message}')
             else:
                 # Don't reveal if email exists or not for security
-                messages.info(request, f'If {email} is registered as a user, a magic login link has been sent.')
+                messages.info(request, f'If {email} is registered as a user, a verification login link has been sent.')
                 
         except Exception:
             # Don't reveal if email exists or not for security
-            messages.info(request, f'If {email} is registered as a user, a magic login link has been sent.')
+            messages.info(request, f'If {email} is registered as a user, a verification login link has been sent.')
     
     return render(request, 'request_magic_login.html')

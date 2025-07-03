@@ -37,15 +37,15 @@ def create_magic_login_token(user, request):
 
 def send_magic_login_email(user, request):
     """Send magic login email to the user"""
-    # Allow magic login for both ops and client users
+    # Allow verification login for both ops and client users
     if not (user.is_client or user.is_ops):
-        return False, "Magic login is only available for registered users"
+        return False, "Verification login is only available for registered users"
     
     try:
         # Create magic token
         magic_token = create_magic_login_token(user, request)
         
-        # Build the magic link
+        # Build the verification link
         magic_link = request.build_absolute_uri(
             reverse('magic_login', kwargs={'token': magic_token.token})
         )
@@ -65,7 +65,7 @@ def send_magic_login_email(user, request):
         
         # Send email with retry mechanism
         success, message = send_email_with_retry(
-            subject='🔗 Your Magic Login Link - Secure File Share',
+            subject='🔗 Your Verification Login Link - Secure File Share',
             message=plain_message,
             recipient_list=[user.email],
             html_message=html_message,
@@ -73,7 +73,7 @@ def send_magic_login_email(user, request):
         )
         
         if success:
-            return True, f"Magic login link sent to {user.email}"
+            return True, f"Verification login link sent to {user.email}"
         else:
             return False, message
         
@@ -88,6 +88,6 @@ def validate_magic_token(token_string):
             return token, None
         else:
             error = "expired" if timezone.now() >= token.expires_at else "already used"
-            return None, f"This magic link has {error}. Please request a new one."
+            return None, f"This verification link has {error}. Please request a new one."
     except MagicLoginToken.DoesNotExist:
-        return None, "Invalid magic link. Please check the URL or request a new one."
+        return None, "Invalid verification link. Please check the URL or request a new one."
