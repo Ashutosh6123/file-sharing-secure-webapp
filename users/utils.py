@@ -37,8 +37,9 @@ def create_magic_login_token(user, request):
 
 def send_magic_login_email(user, request):
     """Send magic login email to the user"""
-    if not user.is_client:
-        return False, "Magic login is only available for client users"
+    # Allow magic login for both ops and client users
+    if not (user.is_client or user.is_ops):
+        return False, "Magic login is only available for registered users"
     
     try:
         # Create magic token
